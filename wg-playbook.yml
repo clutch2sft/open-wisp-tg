@@ -1,0 +1,44 @@
+- hosts: openwisp2_wireguard
+  become: "{{ become | default('yes') }}"
+  roles:
+    - geerlingguy.certbot
+    - ansible-wireguard-openwisp
+  vars:
+    openwisp2_wireguard_controller_url: "https://oopenwisp-devel.private"
+    openwisp2_wireguard_vpn_uuid: "5d7fead2-5f32-4f47-b547-3ed5be4dcce6"
+    openwisp2_wireguard_vpn_key: "myvpnkey"
+    openwisp2_wireguard_flask_key: "my flask key"
+    openwisp2_wireguard_path: "/opt/wireguard-openwisp"
+    openwisp2_wireguard_curl_insecure: false
+    openwisp2_wireguard_flask_endpoint: "/trigger-update"
+    openwisp2_wireguard_flask_port: 8081
+    openwisp2_wireguard_flask_host: 0.0.0.0
+
+
+
+    #openwisp2_wireguard_python: python2.7
+    # Sets the ipv4.method of VXLAN connection, defaults to "link-local"
+    openwisp2_wireguard_vxlan_ipv4_method: disabled
+    openwisp2_wireguard_vxlan_ipv6_method: disabled
+    # SSL certificates
+    openwisp2_ssl_cert: "/etc/letsencrypt/live/{{ inventory_hostname }}/fullchain.pem"
+    openwisp2_ssl_key: "/etc/letsencrypt/live/{{ inventory_hostname }}/privkey.pem"
+
+    # certbot configuration
+    certbot_auto_renew_minute: "20"
+    certbot_auto_renew_hour: "5"
+    certbot_create_if_missing: true
+    certbot_auto_renew_user: "root"
+    certbot_certs:
+      - email: "myrealemail"
+        domains:
+          - "{{ inventory_hostname }}"
+  pre_tasks:
+    - name: Update APT package cache
+      apt:
+        update_cache: true
+      changed_when: false
+      retries: 5
+      delay: 10
+      register: result
+      until: result is success
