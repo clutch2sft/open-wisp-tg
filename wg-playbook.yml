@@ -4,7 +4,7 @@
     - geerlingguy.certbot
     - ansible-wireguard-openwisp
   vars:
-    openwisp2_wireguard_controller_url: "https://oopenwisp-devel.private"
+    openwisp2_wireguard_controller_url: "https://openwisp-devel.private"
     openwisp2_wireguard_vpn_uuid: "5d7fead2-5f32-4f47-b547-3ed5be4dcce6"
     openwisp2_wireguard_vpn_key: "myvpnkey"
     openwisp2_wireguard_flask_key: "my flask key"
